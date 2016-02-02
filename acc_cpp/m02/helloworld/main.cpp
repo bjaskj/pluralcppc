@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "libtest_project/test.h"
+//#include "libtest_project/test.h"
 
 using namespace std;
 
@@ -13,9 +13,11 @@ void foo() {}
 int main() {
     assert(MUL(2, 4) == 8);
 
-    cout << add(1, 2) << endl;
+    //cout << add(1, 2) << endl;
 
     cout << "Hello, C++" << endl;
+    cout << "Something else" << endl;
 
     return 0;
 }
+
