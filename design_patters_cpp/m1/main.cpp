@@ -289,7 +289,42 @@ void interfaceSegregationPrinciple() {
 
 }
 
+// ====================================================================
+// Dependency Injection with Boost.DI
+
+#include "di.hpp"
+
+struct Engine {
+    float volume = 5;
+    int horse_power = 400;
+
+    friend ostream&operator<<(ostream &os, const Engine &obj) {
+        return os
+               << "volume: " << obj.volume
+               << "horse_power: " << obj.horse_power;
+    }
+};
+
+struct Car {
+    shared_ptr<Engine> engine;
+
+    friend ostream&operator<<(ostream &os, const Car &obj) {
+        return os
+               << "car with engie: " << *obj.engine;
+    }
+
+    Car(const shared_ptr<Engine> &engine) : engine(engine) {
+    }
+};
+
+void dep_inject_boost() {
+    auto e = make_shared<Engine>();
+    auto car = make_shared<Car>(e);
+
+    cout << *car << endl;
+}
+
 int main() {
-    interfaceSegregationPrinciple();
+    dep_inject_boost();
     return 0;
 }
