@@ -226,8 +226,70 @@ void liskov() {
     process(s);
 }
 
-int main() {
-    liskov();
-    return 0;
+// ====================================================================
+// Interface Segregation Principle
+
+struct Document;
+/* bad:
+struct IMachine {
+    virtual void print(vector<Document*> docs) = 0;
+    virtual void scan(vector<Document*> docs) = 0;
+    virtual void fax(vector<Document*> docs) = 0;
+};
+
+struct MFP : IMachine {
+    void print(vector<Document *> docs) override {}
+    void scan(vector<Document *> docs) override {};
+    void fax(vector<Document *> docs) override {};
+};
+*/
+
+struct IPrinter {
+    virtual void print(vector<Document*> docs) = 0;
+};
+
+struct IScanner {
+    virtual void scan(vector<Document*> docs) = 0;
+};
+
+struct Printer : IPrinter {
+    void print(vector<Document *> docs) override {
+
+    }
+};
+
+struct Scanner : IScanner {
+    void scan(vector<Document *> docs) override {
+
+    }
+};
+
+struct IMachine : IPrinter, IScanner {};
+
+struct Machine : IMachine {
+    IPrinter &printer;
+    IScanner &scanner;
+
+
+    Machine(IPrinter &printer, IScanner &scanner)
+            : printer(printer),
+              scanner(scanner) { }
+
+    void print(vector<Document *> docs) override {
+        printer.print(docs);
+    }
+
+    void scan(vector<Document *> docs) override {
+        scanner.scan(docs);
+    }
+};
+
+
+void interfaceSegregationPrinciple() {
+
 }
 
+int main() {
+    interfaceSegregationPrinciple();
+    return 0;
+}
