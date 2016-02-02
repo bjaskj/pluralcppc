@@ -28,6 +28,7 @@ struct PersistenceManager {
     }
 };
 
+// ====================================================================
 // Open-closed principle
 
 enum class Color {Red, Green, Blue};
@@ -166,8 +167,67 @@ void openClosedPrinciple() {
     }
 }
 
+// ====================================================================
+// Liskov Substituion Principle
+
+class Rectangle {
+protected:
+    int width, height;
+public:
+
+    Rectangle(int width, int height) : width(width), height(height) { }
+
+    virtual int getWidth() const {
+        return width;
+    }
+
+    virtual void setWidth(int width) {
+        Rectangle::width = width;
+    }
+
+    virtual int getHeight() const {
+        return height;
+    }
+
+    virtual void setHeight(int height) {
+        Rectangle::height = height;
+    }
+
+    int Area() const {
+        return width*height;
+    }
+};
+
+class Square : public Rectangle {
+public:
+    Square(int size) : Rectangle{size, size} {}
+
+    virtual void setWidth(int width) override {
+        this->width = height = width;
+    }
+
+    virtual void setHeight(int height) override {
+        this->height = width = height;
+    }
+};
+
+void process(Rectangle &r) {
+    int w = r.getWidth();
+    r.setHeight(10);
+
+    cout << "Expect area = " << (w*10) << ", got " << r.Area() << endl;
+}
+
+void liskov() {
+    Rectangle r{5, 5};
+    process(r);
+
+    Square s{5};
+    process(s);
+}
+
 int main() {
-    openClosedPrinciple();
+    liskov();
     return 0;
 }
 
