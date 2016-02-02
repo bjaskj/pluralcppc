@@ -294,37 +294,66 @@ void interfaceSegregationPrinciple() {
 
 #include "di.hpp"
 
+struct ILogger {
+    virtual ~ILogger() {}
+    virtual void Log(const std::string &s) = 0;
+};
+
+struct ConsoleLogger : ILogger {
+    void Log(const std::string &s) override {
+        std::cout << "LOG: " << s.c_str() << std::endl;
+    }
+};
+
 struct Engine {
     float volume = 5;
     int horse_power = 400;
 
     friend ostream&operator<<(ostream &os, const Engine &obj) {
         return os
-               << "volume: " << obj.volume
-               << "horse_power: " << obj.horse_power;
+               << " volume: " << obj.volume
+               << " horse_power: " << obj.horse_power;
     }
 };
 
 struct Car {
-    shared_ptr<Engine> engine;
+    std::shared_ptr<Engine> engine;
+    std::shared_ptr<ILogger> logger;
 
     friend ostream&operator<<(ostream &os, const Car &obj) {
         return os
                << "car with engie: " << *obj.engine;
     }
 
-    Car(const shared_ptr<Engine> &engine) : engine(engine) {
+    Car(const shared_ptr<Engine> &engine, const shared_ptr<ILogger> &logger)
+            : engine(engine), logger(logger) {
+        logger->Log("Create a car");
     }
 };
 
 void dep_inject_boost() {
+    /*
     auto e = make_shared<Engine>();
     auto car = make_shared<Car>(e);
+    */
 
-    cout << *car << endl;
+    using namespace boost;
+    auto injector = di::make_injector(
+            di::bind<ILogger>().to<ConsoleLogger>()
+    );
+    auto c = injector.create<std::shared_ptr<Car>>();
+
+    cout << *c << endl;
+}
+
+// ====================================================================
+// Monads
+
+void maybeMonad() {
+
 }
 
 int main() {
-    dep_inject_boost();
+    maybeMonad();
     return 0;
 }

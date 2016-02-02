@@ -3,5 +3,5 @@ project(m1)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp di.hpp)
 add_executable(m1 ${SOURCE_FILES})
